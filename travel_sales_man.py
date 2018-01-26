@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 generation_size=250
-pop_size=200
+pop_size=100
 cities_size=10
 mutation_rate=0.02
 crossover_rate=0.8
@@ -39,14 +39,11 @@ def select(pop):
 def crossover(dad,mom):
   for i in range(dad.shape[0]):
     if np.random.uniform(0,1,1)<crossover_rate:
-      crossover_point=np.random.randint(0,cities_size,size=1)[0]
+      crossover_point=np.random.randint(0,cities_size,size=1)[0] #ok
       suffix=mom[i,crossover_point:]
       for e in suffix:
         if e in dad[i,:crossover_point]:
           candidates=set(dad[i,crossover_point:]) - set(suffix)
-          if len(candidates) == 0:
-                print(dad[i])
-                print(suffix)  #problematic
           suffix[suffix == e] = np.random.choice(np.array(list(candidates)),1)
       dad[i]=np.hstack((dad[i,:crossover_point],suffix))
   return dad
@@ -55,7 +52,6 @@ def crossover(dad,mom):
       
 pop=np.array([np.random.choice(cities_size,cities_size,replace=False) for i in range(pop_size)])
 
-result=[]
 for i in range(generation_size):
 #  for j in range(pop.shape[0]):
   print("generation: "+str(i+1))
@@ -76,17 +72,9 @@ for i in range(generation_size):
   plt.show() 
 #  result.append(1000-np.max(fitness(pop)))
   dad=select(pop)
-  mom=select(pop)
-  children_1=crossover(dad,mom)
-  children_2=crossover(dad,mom)
+  mum=dad #select(pop)
+  children_1=crossover(dad,mum)
+  children_2=crossover(dad,mum)
   children=np.vstack((children_1,children_2))
   pop=mutate(children)
-
-#print(result[-500:])
-
-#hor=np.array([d[e][0] for e in pop[np.argmax(fitness(pop))]])
-#ver=np.array([d[e][1] for e in pop[np.argmax(fitness(pop))]])
-#plt.figure(figsize=(20,10))
-#plt.plot(x, y,"ro")
-#plt.plot(hor, ver,ms=100,linewidth=50)
-#plt.show() 
+  print(pop)
