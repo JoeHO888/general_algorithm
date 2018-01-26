@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-generation_size=10
-pop_size=10
+generation_size=2
+pop_size=2
 cities_size=10
 mutation_rate=0.1
 crossover_rate=0.8
@@ -29,7 +29,7 @@ def fitness(pop):
   fitness=np.zeros(pop_size)
   for j in range(pop_size):
     fitness[j]=np.sum([np.linalg.norm(d[pop[j,i]]-d[pop[j,i+1]]) for i in range(cities_size-1)])
-  return 100-fitness
+  return 1000-fitness
 
 
 def select(pop):
@@ -53,15 +53,21 @@ pop=np.array([np.random.choice(cities_size,cities_size,replace=False) for i in r
 
 
 for i in range(generation_size):
-  for j in range(pop.shape[0]):
-    print("generation: "+str(i+1))
-    print("popualtion: "+str(j+1))
-    hor=np.array([d[e][0] for e in pop[j]])
-    ver=np.array([d[e][1] for e in pop[j]])
-    plt.figure(figsize=(20,10))
-    plt.plot(x, y,"ro")
-    plt.plot(hor, ver)
-    plt.show()
+#  for j in range(pop.shape[0]):
+#    print("generation: "+str(i+1))
+#    print("popualtion: "+str(j+1))
+#    hor=np.array([d[e][0] for e in pop[j]])
+#    ver=np.array([d[e][1] for e in pop[j]])
+#    plt.figure(figsize=(20,10))
+#    plt.plot(x, y,"ro")
+#    plt.plot(hor, ver)
+#    plt.show()
+  hor=np.array([d[e][0] for e in pop[np.argmax(fitness(pop))]])
+  ver=np.array([d[e][1] for e in pop[np.argmax(fitness(pop))]])
+  plt.figure(figsize=(20,10))
+  plt.plot(x, y,"ro")
+  plt.plot(hor, ver)
+  plt.show() 
   dad=select(pop)
   mom=select(pop)
   children_1=crossover(dad,mom)
