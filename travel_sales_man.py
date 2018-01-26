@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
-generation_size=100
-pop_size=100
+generation_size=10
+pop_size=10
 cities_size=10
 mutation_rate=0.1
 crossover_rate=0.8
-map_size=11
+map_size=21
 
 d={}
 
@@ -53,11 +53,12 @@ pop=np.array([np.random.choice(cities_size,cities_size,replace=False) for i in r
 
 
 for i in range(generation_size):
-  for i in range(pop.shape[0]):
+  for j in range(pop.shape[0]):
     print("generation: "+str(i+1))
     print("popualtion: "+str(j+1))
-    hor=np.array([d[e][0] for e in pop[i]])
-    ver=np.array([d[e][1] for e in pop[i]])
+    hor=np.array([d[e][0] for e in pop[j]])
+    ver=np.array([d[e][1] for e in pop[j]])
+    plt.figure(figsize=(20,10))
     plt.plot(x, y,"ro")
     plt.plot(hor, ver)
     plt.show()
