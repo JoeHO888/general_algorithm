@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-generation_size=500
-pop_size=500
+generation_size=250
+pop_size=200
 cities_size=10
 mutation_rate=0.02
 crossover_rate=0.1
@@ -39,12 +39,13 @@ def select(pop):
 def crossover(dad,mom):
   for i in range(dad.shape[0]):
     if np.random.uniform(0,1,1)<crossover_rate:
-      suffix=mom[i,cities_size//2:]
+      crossover_point=np.random.randint(1,cities_size,size=1)
+      suffix=mom[i,crossover_point:]
       for e in suffix:
-        if e in dad[i,:cities_size//2]:
-          candidates=set(dad[i,cities_size//2:]) - set(suffix)
+        if e in dad[i,:crossover_point]:
+          candidates=set(dad[i,crossover_point:]) - set(suffix)
           suffix[suffix == e] = np.random.choice(np.array(list(candidates)),1)
-      dad[i]=np.hstack((dad[i,:cities_size//2],suffix))
+      dad[i]=np.hstack((dad[i,:crossover_point],suffix))
   return dad
 
         
@@ -53,35 +54,36 @@ pop=np.array([np.random.choice(cities_size,cities_size,replace=False) for i in r
 
 result=[]
 for i in range(generation_size):
-  for j in range(pop.shape[0]):
-    print("generation: "+str(i+1))
-    print("popualtion: "+str(j+1))
-    print("distance: "+ str(fitness(pop)[j]))
-    hor=np.array([d[e][0] for e in pop[j]])
-    ver=np.array([d[e][1] for e in pop[j]])
-    plt.figure(figsize=(20,10))
-    plt.plot(x, y,"ro")
-    plt.plot(hor, ver)
-    plt.show()
-#  hor=np.array([d[e][0] for e in pop[np.argmax(fitness(pop))]])
-#  ver=np.array([d[e][1] for e in pop[np.argmax(fitness(pop))]])
-#  plt.figure(figsize=(20,10))
-#  plt.plot(x, y,"ro")
-#  plt.plot(hor, ver)
-#  plt.show() 
+#  for j in range(pop.shape[0]):
+  print("generation: "+str(i+1))
+    
+#    print("popualtion: "+str(j+1))
+  print("distance: "+ str(1000-np.min(fitness(pop))))
+#    hor=np.array([d[e][0] for e in pop[j]])
+#    ver=np.array([d[e][1] for e in pop[j]])
+#    plt.figure(figsize=(20,10))
+#    plt.plot(x, y,"ro")
+#    plt.plot(hor, ver)
+#    plt.show()
+  hor=np.array([d[e][0] for e in pop[np.argmin(fitness(pop))]])
+  ver=np.array([d[e][1] for e in pop[np.argmin(fitness(pop))]])
+  plt.figure(figsize=(20,10))
+  plt.plot(x, y,"ro",ms=20)
+  plt.plot(hor, ver,linewidth=3)
+  plt.show() 
 #  result.append(1000-np.max(fitness(pop)))
-#  dad=select(pop)
-#  mom=select(pop)
-#  children_1=crossover(dad,mom)
-#  children_2=crossover(dad,mom)
-#  children=np.vstack((children_1,children_2))
-#  pop=mutate(children)
+  dad=select(pop)
+  mom=select(pop)
+  children_1=crossover(dad,mom)
+  children_2=crossover(dad,mom)
+  children=np.vstack((children_1,children_2))
+  pop=mutate(children)
 
 #print(result[-500:])
 
-hor=np.array([d[e][0] for e in pop[np.argmax(fitness(pop))]])
-ver=np.array([d[e][1] for e in pop[np.argmax(fitness(pop))]])
-plt.figure(figsize=(20,10))
-plt.plot(x, y,"ro")
-plt.plot(hor, ver)
-plt.show() 
+#hor=np.array([d[e][0] for e in pop[np.argmax(fitness(pop))]])
+#ver=np.array([d[e][1] for e in pop[np.argmax(fitness(pop))]])
+#plt.figure(figsize=(20,10))
+#plt.plot(x, y,"ro")
+#plt.plot(hor, ver,ms=100,linewidth=50)
+#plt.show() 
