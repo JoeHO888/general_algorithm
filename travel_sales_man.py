@@ -1,8 +1,8 @@
 import numpy as np
-
+import matplotlib.pyplot as plt
 generation_size=100
 pop_size=100
-cities_size=4
+cities_size=10
 mutation_rate=0.1
 crossover_rate=0.8
 map_size=11
@@ -12,7 +12,8 @@ d={}
 for x in range(0,cities_size):
         d[int("{}".format(x))]=np.random.randint(map_size,size=(2,1))
 
-print(d)
+x=np.array([d[e][0] for e in d])
+y=np.array([d[e][1] for e in d])
 
 def mutate(children):
   for e in children:
@@ -52,7 +53,12 @@ pop=np.array([np.random.choice(cities_size,cities_size,replace=False) for i in r
 
 
 for i in range(generation_size):
-  print(max(fitness(pop)))
+  for i in range(pop.shape[0]):
+    hor=np.array([d[e][0] for e in pop[i]])
+    ver=np.array([d[e][1] for e in pop[i]])
+    plt.plot(x, y,"ro")
+    plt.plot(hor, ver)
+    plt.show()
   dad=select(pop)
   mom=select(pop)
   children_1=crossover(dad,mom)
@@ -61,7 +67,7 @@ for i in range(generation_size):
   pop=mutate(children)
 
 
-#graph is needed
+
 
         
   
