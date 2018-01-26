@@ -53,8 +53,8 @@ g=np.array([np.random.choice(cities_size,cities_size,replace=False) for i in ran
 
 for i in range(generation_size):
   print("gen: "+str(i))
-  hor=np.array([d[e][0] for e in pop[np.argmin(fitness(pop))]])
-  ver=np.array([d[e][1] for e in pop[np.argmin(fitness(pop))]])
+  hor=np.array([d[e][0] for e in g[np.argmin(fitness(g))]])
+  ver=np.array([d[e][1] for e in g[np.argmin(fitness(g))]])
   plt.figure(figsize=(20,10))
   plt.plot(x, y,"ro",ms=20)
   plt.plot(hor, ver,linewidth=3)
@@ -67,21 +67,4 @@ for i in range(generation_size):
   child_2=crossover(parent2,parent4)
   new_g=np.vstack((child_1,child_2))
   g=mutate(new_g)
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
