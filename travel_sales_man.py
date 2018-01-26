@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-generation_size=250
+generation_size=100
 pop_size=100
 cities_size=10
 mutation_rate=0.02
@@ -47,34 +47,41 @@ def crossover(dad,mom):
           suffix[suffix == e] = np.random.choice(np.array(list(candidates)),1)
       dad[i]=np.hstack((dad[i,:crossover_point],suffix))
   return dad
-
         
       
-pop=np.array([np.random.choice(cities_size,cities_size,replace=False) for i in range(pop_size)])
+g=np.array([np.random.choice(cities_size,cities_size,replace=False) for i in range(pop_size)])
 
 for i in range(generation_size):
-#  for j in range(pop.shape[0]):
-  print("generation: "+str(i+1))
-    
-#    print("popualtion: "+str(j+1))
-  print("distance: "+ str(1000-np.min(fitness(pop))))
-#    hor=np.array([d[e][0] for e in pop[j]])
-#    ver=np.array([d[e][1] for e in pop[j]])
-#    plt.figure(figsize=(20,10))
-#    plt.plot(x, y,"ro")
-#    plt.plot(hor, ver)
-#    plt.show()
+  print("gen: "+str(i))
   hor=np.array([d[e][0] for e in pop[np.argmin(fitness(pop))]])
   ver=np.array([d[e][1] for e in pop[np.argmin(fitness(pop))]])
   plt.figure(figsize=(20,10))
   plt.plot(x, y,"ro",ms=20)
   plt.plot(hor, ver,linewidth=3)
   plt.show() 
-#  result.append(1000-np.max(fitness(pop)))
-  dad=select(pop)
-  mum=dad #select(pop)
-  children_1=crossover(dad,mum)
-  children_2=crossover(dad,mum)
-  children=np.vstack((children_1,children_2))
-  pop=mutate(children)
-  print(pop)
+  parent1=select(g)
+  parent2=select(g)
+  parent3=select(g)
+  parent4=select(g)
+  child_1=crossover(parent1,parent3)
+  child_2=crossover(parent2,parent4)
+  new_g=np.vstack((child_1,child_2))
+  g=mutate(new_g)
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
