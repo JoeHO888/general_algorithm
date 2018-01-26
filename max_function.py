@@ -21,10 +21,10 @@ def mutate(DNA):
         e[i] = 0 if e[i] ==1 else 1
   return DNA
         
-def crossover(dad,mam):
+def crossover(dad,mom):
   for i in range(dad.shape[0]):
     if np.random.uniform(0,1,1)<crossover_rate:
-      dad[i,5:]=mam[i][5:]
+      dad[i,5:]=mom[i][5:]
   return dad
 
 def select(DNA):
