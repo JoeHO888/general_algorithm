@@ -54,6 +54,8 @@ pop=np.array([np.random.choice(cities_size,cities_size,replace=False) for i in r
 
 for i in range(generation_size):
   for i in range(pop.shape[0]):
+    print("generation: "+str(i+1))
+    print("popualtion: "+str(j+1))
     hor=np.array([d[e][0] for e in pop[i]])
     ver=np.array([d[e][1] for e in pop[i]])
     plt.plot(x, y,"ro")
