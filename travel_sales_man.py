@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
-generation_size=2
-pop_size=2
+generation_size=200
+pop_size=100
 cities_size=10
-mutation_rate=0.1
+mutation_rate=0.3
 crossover_rate=0.8
 map_size=21
 
@@ -62,12 +62,13 @@ for i in range(generation_size):
 #    plt.plot(x, y,"ro")
 #    plt.plot(hor, ver)
 #    plt.show()
-  hor=np.array([d[e][0] for e in pop[np.argmax(fitness(pop))]])
-  ver=np.array([d[e][1] for e in pop[np.argmax(fitness(pop))]])
-  plt.figure(figsize=(20,10))
-  plt.plot(x, y,"ro")
-  plt.plot(hor, ver)
-  plt.show() 
+#  hor=np.array([d[e][0] for e in pop[np.argmax(fitness(pop))]])
+#  ver=np.array([d[e][1] for e in pop[np.argmax(fitness(pop))]])
+#  plt.figure(figsize=(20,10))
+#  plt.plot(x, y,"ro")
+#  plt.plot(hor, ver)
+#  plt.show() 
+  print(1000-np.max(fitness(pop)))
   dad=select(pop)
   mom=select(pop)
   children_1=crossover(dad,mom)
