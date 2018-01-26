@@ -4,7 +4,7 @@ generation_size=250
 pop_size=200
 cities_size=10
 mutation_rate=0.02
-crossover_rate=0.1
+crossover_rate=0.8
 map_size=21
 
 d={}
@@ -39,11 +39,14 @@ def select(pop):
 def crossover(dad,mom):
   for i in range(dad.shape[0]):
     if np.random.uniform(0,1,1)<crossover_rate:
-      crossover_point=np.random.randint(1,cities_size,size=1)
+      crossover_point=np.random.randint(1,cities_size,size=1)[0]
       suffix=mom[i,crossover_point:]
       for e in suffix:
         if e in dad[i,:crossover_point]:
           candidates=set(dad[i,crossover_point:]) - set(suffix)
+          if len(candidates) == 0:
+                print(dad[i])
+                print(suffix)  #problematic
           suffix[suffix == e] = np.random.choice(np.array(list(candidates)),1)
       dad[i]=np.hstack((dad[i,:crossover_point],suffix))
   return dad
