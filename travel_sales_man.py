@@ -39,7 +39,7 @@ def select(pop):
 def crossover(dad,mom):
   for i in range(dad.shape[0]):
     if np.random.uniform(0,1,1)<crossover_rate:
-      crossover_point=np.random.randint(1,cities_size,size=1)[0]
+      crossover_point=np.random.randint(0,cities_size,size=1)[0]
       suffix=mom[i,crossover_point:]
       for e in suffix:
         if e in dad[i,:crossover_point]:
