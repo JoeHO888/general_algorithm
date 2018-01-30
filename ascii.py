@@ -23,8 +23,7 @@ def crossover(parent):
         if  np.random.uniform(0,1,1)<crossover_rate:
             crosspoint=np.random.randint(0,length,size=1)[0]
             i=np.random.randint(0,population_size,size=1)[0]
-            suffix=population[i,crosspoint:][np.newaxis,:]
-            e[crosspoint:]=suffix
+            e[crosspoint:]=population[i,crosspoint:][np.newaxis,:]
     return parent
 
 def mutate(pop):
