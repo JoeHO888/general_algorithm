@@ -21,7 +21,7 @@ def mutate(DNA):
         e[i] = 0 if e[i] ==1 else 1
   return DNA
         
-def crossover(dad,mom):
+def crossover(dad,mom): 
   for i in range(dad.shape[0]):
     if np.random.uniform(0,1,1)<crossover_rate:
       dad[i,5:]=mom[i][5:]
@@ -43,8 +43,8 @@ for j in range(generation):
   plt.plot(pop,F(pop),"ro")
   plt.show()
   parents=select(DNA)
-  child=crossover(parents,parents)
-  DNA=np.vstack((child,child))
+  child=crossover(parents,parents) #wrong, as it results in child == parents 
+  DNA=np.vstack((child,child)) #not good, same element child dominates the whole DNA
   DNA=mutate(DNA)
 
 
