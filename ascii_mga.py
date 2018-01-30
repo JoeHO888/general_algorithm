@@ -18,16 +18,16 @@ def crossover(pop):
     for k in range(compare_times):
         i=np.random.randint(0,population_size,size=1)[0]
         j=np.random.randint(0,population_size,size=1)[0]
-        if fitness(pop[i])>fitness(pop[j]):
-            winner=pop[i]
-            loser=pop[j]
-        else:
-            winner=pop[j]
-            loser=pop[i]
         if  np.random.uniform(0,1,1)<crossover_rate:
-                  crosspoint=np.random.randint(0,length,size=1)[0]
-                  loser[crosspoint:]=winner[crosspoint:]
-        loser=mutate(loser)
+            if fitness(pop[i])>fitness(pop[j]):
+                winner=pop[i]
+                loser=pop[j]
+            else:
+                winner=pop[j]
+                loser=pop[i]
+            crosspoint=np.random.randint(0,length,size=1)[0]
+            loser[crosspoint:]=winner[crosspoint:]
+            loser=mutate(loser)
     return pop
 
 def mutate(member):
