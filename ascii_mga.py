@@ -16,9 +16,9 @@ def fitness(member):
 
 def crossover(pop):
     for k in range(compare_times):
-        i=np.random.randint(0,population_size,size=1)[0]
-        j=np.random.randint(0,population_size,size=1)[0]
         if  np.random.uniform(0,1,1)<crossover_rate:
+            i=np.random.randint(0,population_size,size=1)[0]
+            j=np.random.randint(0,population_size,size=1)[0]
             if fitness(pop[i])>fitness(pop[j]):
                 winner=pop[i]
                 loser=pop[j]
