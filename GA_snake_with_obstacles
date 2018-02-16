@@ -2,19 +2,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
+#population setting
 mutation_rate=0.01
 crossover_rate=0.8
-pop_size=100
-generation=50
-DNA_length=12
+pop_size=1000
+generation=500
+DNA_length=18
+
+#Specific setting
+#step * DNA_length = max height this tree can achieve
+
 step=1
-starting_pt=[0,0]
-obstacle=[[3,-5,1],[7,-1,12]]
-
-
-#def fitness(pop):
-#       #return abs(sum(np.sin(pop).T))
-#      return sum(np.cos(pop).T)**2+sum(np.sin(pop).T)**2
+starting_pt=[0.5,0]
+obstacle=[[3,-12,1],[3,3,5],[7,2,12],[5,-12,2]]  
+# first obstacle: straight line connecting (-12,3) to (1,3)
+#No obstacl: []
 
 def fitness(pop,start=[0,0],obstacle=[],step=1):
     result=[]
@@ -40,7 +42,7 @@ def fitness(pop,start=[0,0],obstacle=[],step=1):
             element_x.append(current_x)
             element_y.append(current_y)
         if current_y-start[1]<0:
-            result.append(step)
+            result.append(0)
         else:
             result.append(current_y-start[1])
         whole_x.append(element_x)
@@ -49,24 +51,25 @@ def fitness(pop,start=[0,0],obstacle=[],step=1):
 
 def hit(current_x,current_y,next_x,next_y,obstacle):
     if current_y <= obstacle[0] and next_y > obstacle[0]:
-        if obstacle[1]<=current_x <=obstacle[2]:
+        if obstacle[1]<=current_x <=obstacle[2] or obstacle[1]<=next_x <=obstacle[2]:
+            return True
+    if  current_y > obstacle[0] and next_y <= obstacle[0]:
+        if obstacle[1]<=current_x <=obstacle[2] or obstacle[1]<=next_x <=obstacle[2]:
             return True
     return False
     
-
-
 def select(pop,start=[0,0],obstacle=[],step=1):
     score=fitness(pop,start,obstacle,step)[0]
     index=np.random.choice(pop_size, pop_size, replace=True,p=score/score.sum()) #problematic
     return np.array([pop[i] for i in index]) 
 
-
 def crossover(dad,pop): 
         for i in range(len(dad)):
             if np.random.uniform(0,1,1)<crossover_rate:
-                crosspoint=np.random.randint(0,DNA_length,size=1)[0]
+                crosspoint_start=np.random.randint(0,DNA_length,size=1)[0]
+                crosspoint_end=np.random.randint(0,DNA_length,size=1)[0]
                 j=np.random.randint(0,pop_size,size=1)[0]
-                dad[i,crosspoint:]=pop[j,crosspoint:]
+                dad[i,crosspoint_start:crosspoint_end]=pop[j,crosspoint_start:crosspoint_end]
         return dad
 
 def mutate(pop):
@@ -88,15 +91,13 @@ for gen in range(generation):
     score = f[0]
     print("Best one of generation {}:".format(gen+1))
     best = population[np.argmax(score)]
-    #print(best)
     print("fitness: " + str(max(score)))
-    #axes = plt.gca()
-    #axes.set_xlim([-DNA_length*step+starting_pt[0],DNA_length*step+starting_pt[0]])
-    #axes.set_ylim([-DNA_length*step+starting_pt[1],DNA_length*step+starting_pt[1]])
     plt.figure(figsize=(20,10))
-    plt.plot([obstacle[0][1],obstacle[0][2]],[obstacle[0][0],obstacle[0][0]],linewidth=1)
-    plt.plot([obstacle[1][1],obstacle[1][2]],[obstacle[1][0],obstacle[1][0]],linewidth=1)
+    for bar in obstacle:
+        plt.plot([bar[1],bar[2]],[bar[0],bar[0]],linewidth=1)
     plt.plot(f[1][np.argmax(score)],f[2][np.argmax(score)],linewidth=1)
+    #for i in range(pop_size):
+    #    plt.plot(f[1][i],f[2][i],linewidth=1,color='k')
     plt.show() 
     
     
