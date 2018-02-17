@@ -1,0 +1,125 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import math
+
+#population setting
+mutation_rate=0.01
+crossover_rate=0.8
+pop_size=1000
+generation=500
+DNA_length=30
+
+#Specific setting
+#step * DNA_length = max height this tree can achieve
+
+step=1
+end_point=[-6,7.5]
+starting_pt=[0,-5]
+obstacle=[["v",-0.5,-12,4],["v",0.5,-12,6],["h",4,-7,-0.5],["h",6,-6,0.5],["v",-7,4,8],["v",-6,5,8] ] 
+# first obstacle: straight line connecting (-12,3) to (1,3)
+#No obstacl: []
+
+def fitness(pop,start=[0,0],obstacle=[],step=1):
+    result=[]
+    whole_x=[]
+    whole_y=[]
+    for e in pop:
+        element_x=[]
+        element_y=[]
+        current_x = start[0]
+        current_y = start[1]
+        element_x.append(current_x)
+        element_y.append(current_y)
+        for i in range(DNA_length):
+            next_x = current_x + step*math.cos(e[i])
+            next_y = current_y + step*math.sin(e[i])
+            for bar in obstacle:
+                if bar[0] =="v":
+                    if hit_ver(current_x,current_y,next_x,next_y,bar[1:]):
+                        slope = (next_y - current_y) /(next_x - current_x)
+                        next_x = bar[1]
+                        next_y= current_y+((next_x - current_x)*slope)
+                if bar[0] =="h":
+                    if hit_hor(current_x,current_y,next_x,next_y,bar[1:]):
+                        slope = (next_y - current_y) /(next_x - current_x)
+                        next_y = bar[1]
+                        next_x = current_x+((next_y - current_y)/slope)
+            current_x=next_x
+            current_y=next_y
+            element_x.append(current_x)
+            element_y.append(current_y)
+            
+        result.append(((current_x-end_point[0])**2+(current_y-end_point[1])**2+0.01)**-1)
+        # current_y-start[1]<0:
+        #    result.append(0)
+        #else:
+        #    result.append(current_y-start[1])
+        whole_x.append(element_x)
+        whole_y.append(element_y)
+    return [np.array(result), whole_x, whole_y]
+
+def hit_hor(current_x,current_y,next_x,next_y,obstacle):
+    if current_y <= obstacle[0] and next_y >= obstacle[0]:
+        if obstacle[1]<=current_x <=obstacle[2] or obstacle[1]<=next_x <=obstacle[2]:
+            return True
+    if  current_y >= obstacle[0] and next_y <= obstacle[0]:
+        if obstacle[1]<=current_x <=obstacle[2] or obstacle[1]<=next_x <=obstacle[2]:
+            return True
+    return False
+
+def hit_ver(current_x,current_y,next_x,next_y,obstacle):
+    if current_x <= obstacle[0] and next_x >= obstacle[0]:
+        if obstacle[1]<=current_y <=obstacle[2] or obstacle[1]<=next_y <=obstacle[2]:
+            return True
+    if  current_x>= obstacle[0] and next_x <= obstacle[0]:
+        if obstacle[1]<=current_y<=obstacle[2] or obstacle[1]<=next_y <=obstacle[2]:
+            return True
+    return False
+
+    
+def select(pop,start=[0,0],obstacle=[],step=1):
+    score=fitness(pop,start,obstacle,step)[0]
+    index=np.random.choice(pop_size, pop_size, replace=True,p=score/score.sum()) #problematic
+    return np.array([pop[i] for i in index]) 
+
+def crossover(dad,pop): 
+        for i in range(len(dad)):
+            if np.random.uniform(0,1,1)<crossover_rate:
+                crosspoint_start=np.random.randint(0,DNA_length,size=1)[0]
+                crosspoint_end=np.random.randint(0,DNA_length,size=1)[0]
+                j=np.random.randint(0,pop_size,size=1)[0]
+                dad[i,crosspoint_start:crosspoint_end]=pop[j,crosspoint_start:crosspoint_end]
+        return dad
+
+def mutate(pop):
+        for e in pop:
+            for i in range(DNA_length):
+                  if np.random.uniform(0,1,1)<mutation_rate:
+                        e[i]=np.random.uniform(-math.pi,math.pi)
+        return pop
+
+
+population=np.random.uniform(-math.pi,math.pi,size=(pop_size, DNA_length))
+
+
+for gen in range(generation):
+    dad = select(population,starting_pt,obstacle,step)
+    children = crossover(dad,population)
+    population = mutate(children)
+    f = fitness(population,starting_pt,obstacle,step)
+    score = f[0]
+    print("Best one of generation {}:".format(gen+1))
+    best = population[np.argmax(score)]
+    print("fitness: " + str(max(score)))
+    #plt.figure(figsize=(20,10))
+    for bar in obstacle:
+        if bar[0] == "h":
+            plt.plot([bar[2],bar[3]],[bar[1],bar[1]],linewidth=1,color="k")
+        if bar[0] =="v":
+            plt.plot([bar[1],bar[1]],[bar[2],bar[3]],linewidth=1,color="k")
+    plt.plot(f[1][np.argmax(score)],f[2][np.argmax(score)],linewidth=1)
+    #for i in range(pop_size):
+    #    plt.plot(f[1][i],f[2][i],linewidth=1,color='k')
+    plt.show() 
+    
+    
